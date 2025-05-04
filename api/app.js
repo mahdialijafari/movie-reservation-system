@@ -4,16 +4,12 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-
-// Routers
 import authRouter from './Routes/auth.js';
 import movieRouter from './Routes/movie.js';
 import showtimeRouter from './Routes/showtime.js';
 import seatRouter from './Routes/seat.js';
 import reservationRouter from './Routes/reservation.js';
 import userRouter from './Routes/user.js';
-
-// Middlewares
 import { isLogin } from './Middlewares/isLogin.js';
 import { isAdmin } from './Middlewares/isAdmin.js';
 import { catchError,HandleERROR } from 'vanta-api';
@@ -25,7 +21,6 @@ export const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// Middleware
 app.use(morgan('dev'));
 app.use(cors());
 app.use(express.json());
@@ -42,7 +37,6 @@ app.use('/api/users', isLogin, userRouter);
 app.use('/api/reports', isAdmin, reportRouter);
 
 
-// Error handling
 app.use('*', (req, res, next) => {
   return next(new HandleERROR('Route not found', 404));
 });
