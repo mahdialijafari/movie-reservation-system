@@ -1,5 +1,6 @@
 import { catchAsync,HandleERROR,ApiFeatures } from "vanta-api";
 import User from "../Models/userMd.js";
+import ApiFeatures from "vanta-api";
 
 export const getAll = catchAsync(async (req, res, next) => {
   const features = new ApiFeatures(User, req.query, req.role)
@@ -12,7 +13,7 @@ export const getAll = catchAsync(async (req, res, next) => {
   return res.status(200).json(resData);
 });
 
-export const getOne = catchAsync(async (req, res, next) => {    
+export const getOne = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   if (id !== req.userId && req.role !== 'admin' && req.role !== 'superAdmin') {
     return next(new HandleERROR("You don't have permission.", 401));
