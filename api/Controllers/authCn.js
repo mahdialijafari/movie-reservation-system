@@ -8,7 +8,6 @@ const generateToken = (user) => {
   return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET);
 };
 
-// 1. Send SMS or prompt for password
 export const auth = catchAsync(async (req, res, next) => {
   const { phoneNumber = null } = req.body;
   if (!phoneNumber) return next(new HandleERROR("Phone number is required", 400));
@@ -32,7 +31,6 @@ export const auth = catchAsync(async (req, res, next) => {
   });
 });
 
-// 2. Verify OTP
 export const checkOtp = catchAsync(async (req, res, next) => {
   const { phoneNumber = null, code = null } = req.body;
   if (!phoneNumber || !code) return next(new HandleERROR("Phone number and code are required", 400));
@@ -69,7 +67,6 @@ export const checkOtp = catchAsync(async (req, res, next) => {
   });
 });
 
-// 3. Login with password
 export const checkPassword = catchAsync(async (req, res, next) => {
   const { phoneNumber = null, password = null } = req.body;
   if (!phoneNumber || !password) return next(new HandleERROR("Phone number and password are required", 400));
@@ -100,7 +97,6 @@ export const checkPassword = catchAsync(async (req, res, next) => {
   });
 });
 
-// 4. Reset password via OTP
 export const forgetPassword = catchAsync(async (req, res, next) => {
   const { phoneNumber = null, code = null, newPassword = null } = req.body;
   if (!phoneNumber || !code || !newPassword) {
@@ -136,7 +132,6 @@ export const forgetPassword = catchAsync(async (req, res, next) => {
   });
 });
 
-// 5. Resend OTP
 export const resendCode = catchAsync(async (req, res, next) => {
   const { phoneNumber = null } = req.body;
   if (!phoneNumber) return next(new HandleERROR("Phone number is required", 400));
