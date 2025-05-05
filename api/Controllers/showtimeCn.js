@@ -78,24 +78,27 @@ export const remove = catchAsync(async (req, res, next) => {
 });
 
 export const getByMovieGrouped = catchAsync(async (req, res, next) => {
-  const { movieId } = req.params;
-
-  const movie = await Movie.findById(movieId);
-  if (!movie) {
-    return next(new HandleERROR("Movie not found", 404));
-  }
-
-  const showtimes = await Showtime.find({ movie: movieId }).sort("dateTime");
-
-  const grouped = showtimes.reduce((acc, showtime) => {
-    const date = new Date(showtime.dateTime).toISOString().split("T")[0];
-    if (!acc[date]) acc[date] = [];
-    acc[date].push(showtime);
-    return acc;
-  }, {});
-
-  res.status(200).json({
-    success: true,
-    data: grouped,
+    const { movieId } = req.params;
+  
+    const movie = await Movie.findById(movieId);
+    if (!movie) {
+      return next(new HandleERROR("Movie not found", 404));
+    }
+  
+    const showtimes = await Showtime.find({ movie: movieId })
+      .sort("dateTime")
+      .populate("room movie");
+  
+    const grouped = showtimes.reduce((acc, showtime) => {
+      const date = new Date(showtime.dateTime).toISOString().split("T")[0];
+      if (!acc[date]) acc[date] = [];
+      acc[date].push(showtime);
+      return acc;
+    }, {});
+  
+    res.status(200).json({
+      success: true,
+      data: grouped,
+    });
   });
-});
+  

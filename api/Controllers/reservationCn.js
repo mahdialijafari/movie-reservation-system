@@ -3,11 +3,9 @@ import Reservation from "../Models/reservationMd.js";
 import Showtime from "../Models/showtimeMd.js";
 import { checkSeatAvailability } from "../Utils/seatHelper.js";
 
-// Get all reservations
 export const getAll = catchAsync(async (req, res, next) => {
-  const query = (req.role === 'admin' || req.role === 'superAdmin')
-    ? {}
-    : { user: req.userId };
+  const isAdmin = req.role === 'admin' || req.role === 'superAdmin';
+  const query = isAdmin ? {} : { user: req.userId };
 
   const reservations = await Reservation.find(query)
     .populate("showtime movie user");
@@ -19,7 +17,6 @@ export const getAll = catchAsync(async (req, res, next) => {
   });
 });
 
-// Get one reservation
 export const getOne = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
@@ -30,8 +27,9 @@ export const getOne = catchAsync(async (req, res, next) => {
     return next(new HandleERROR("Reservation not found", 404));
   }
 
-  if (reservation.user.toString() !== req.userId &&
-      req.role !== "admin" && req.role !== "superAdmin") {
+  const isOwner = reservation.user.toString() === req.userId;
+  const isAdmin = req.role === 'admin' || req.role === 'superAdmin';
+  if (!isOwner && !isAdmin) {
     return next(new HandleERROR("You don't have permission.", 401));
   }
 
@@ -45,7 +43,7 @@ export const create = catchAsync(async (req, res, next) => {
   const { showtimeId, seats } = req.body;
 
   if (!showtimeId || !Array.isArray(seats) || seats.length === 0) {
-    return next(new HandleERROR("Showtime ID is Required and at least one seat are required", 400));
+    return next(new HandleERROR("Showtime ID is Required and at least one seat is required", 400));
   }
 
   const showtime = await Showtime.findById(showtimeId);
@@ -73,14 +71,21 @@ export const create = catchAsync(async (req, res, next) => {
 export const remove = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
-  const reservation = await Reservation.findById(id);
+  const reservation = await Reservation.findById(id).populate("showtime");
   if (!reservation) {
     return next(new HandleERROR("Reservation not found", 404));
   }
 
-  if (reservation.user.toString() !== req.userId &&
-      req.role !== "admin" && req.role !== "superAdmin") {
+  const isOwner = reservation.user.toString() === req.userId;
+  const isAdmin = req.role === 'admin' || req.role === 'superAdmin';
+
+  if (!isOwner && !isAdmin) {
     return next(new HandleERROR("You don't have permission.", 401));
+  }
+
+  const now = new Date();
+  if (!isAdmin && reservation.showtime.dateTime <= now) {
+    return next(new HandleERROR("Cannot cancel past reservations", 400));
   }
 
   await reservation.deleteOne();

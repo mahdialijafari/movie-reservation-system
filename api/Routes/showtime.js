@@ -5,7 +5,7 @@ import { create, getAll, getByMovieGrouped, getOne, remove, update } from '../Co
 const showTimeRouter = express.Router()
 
 showTimeRouter.route('/').get(getAll).post(isAdmin,create)
-showTimeRouter.route('/by-movie-goroup').get(getByMovieGrouped)
+showTimeRouter.route('/by-movie-group/:movieId').get(getByMovieGrouped)
 showTimeRouter.route('/:id').get(getOne).patch(isAdmin,update).delete(isAdmin,remove) 
 
 export default showTimeRouter
