@@ -41,7 +41,6 @@ export const getOne = catchAsync(async (req, res, next) => {
   });
 });
 
-// Create a reservation
 export const create = catchAsync(async (req, res, next) => {
   const { showtimeId, seats } = req.body;
 
@@ -71,7 +70,6 @@ export const create = catchAsync(async (req, res, next) => {
   });
 });
 
-// Cancel reservation
 export const remove = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
