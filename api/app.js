@@ -14,6 +14,7 @@ import reportRouter from './Routes/report.js';
 import { isLogin } from './Middlewares/isLogin.js';
 import { isAdmin } from './Middlewares/isAdmin.js';
 import { catchError,HandleERROR } from 'vanta-api';
+import uploadRouter from './Routes/upload.js';
 
 dotenv.config();
 
@@ -35,6 +36,8 @@ app.use('/api/seats', seatRouter);
 app.use('/api/reservations', isLogin, reservationRouter);
 app.use('/api/users', isLogin, userRouter);
 app.use('/api/reports', isAdmin, reportRouter);
+
+app.use('/api/upload',uploadRouter)
 
 
 app.use('*', (req, res, next) => {

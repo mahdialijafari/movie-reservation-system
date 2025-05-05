@@ -1,5 +1,4 @@
-import catchAsync from "../Utils/catchAsync.js";
-import HandleError from "../Utils/handleError.js";
+import { catchAsync,HandleERROR } from "vanta-api";
 import fs from "fs";
 import { __dirname } from "../app.js";
 
