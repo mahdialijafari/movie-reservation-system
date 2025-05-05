@@ -5,13 +5,14 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import authRouter from './Routes/auth.js';
-// import movieRouter from './Routes/movie.js';
-// import showtimeRouter from './Routes/showtime.js';
-// import seatRouter from './Routes/seat.js';
-// import reservationRouter from './Routes/reservation.js';
-// import userRouter from './Routes/user.js';
-// import { isLogin } from './Middlewares/isLogin.js';
-// import { isAdmin } from './Middlewares/isAdmin.js';
+import movieRouter from './Routes/movie.js';
+import showtimeRouter from './Routes/showtime.js';
+import seatRouter from './Routes/seat.js';
+import reservationRouter from './Routes/reservation.js';
+import userRouter from './Routes/user.js';
+import reportRouter from './Routes/report.js';
+import { isLogin } from './Middlewares/isLogin.js';
+import { isAdmin } from './Middlewares/isAdmin.js';
 import { catchError,HandleERROR } from 'vanta-api';
 
 dotenv.config();
@@ -27,14 +28,13 @@ app.use(express.json());
 app.use(express.static('Public'));
 
 
-// Routes
 app.use('/api/auth', authRouter);
-// app.use('/api/movies', movieRouter);
-// app.use('/api/showtimes', showtimeRouter);
-// app.use('/api/seats', seatRouter);
-// app.use('/api/reservations', isLogin, reservationRouter);
-// app.use('/api/users', isLogin, userRouter);
-// app.use('/api/reports', isAdmin, reportRouter);
+app.use('/api/movies', movieRouter);
+app.use('/api/showtimes', showtimeRouter);
+app.use('/api/seats', seatRouter);
+app.use('/api/reservations', isLogin, reservationRouter);
+app.use('/api/users', isLogin, userRouter);
+app.use('/api/reports', isAdmin, reportRouter);
 
 
 app.use('*', (req, res, next) => {
