@@ -31,7 +31,7 @@ app.use(express.static('Public'));
 
 app.use('/api/auth', authRouter);
 app.use('/api/movies', movieRouter);
-app.use('/api/showtimes', showtimeRouter);
+app.use('/api/showtime', showtimeRouter);
 app.use('/api/seats', seatRouter);
 app.use('/api/reservations', isLogin, reservationRouter);
 app.use('/api/users', isLogin, userRouter);
@@ -40,7 +40,7 @@ app.use('/api/reports', isAdmin, reportRouter);
 app.use('/api/upload',uploadRouter)
 
 
-app.use('*', (req, res, next) => {
+app.use( (req, res, next) => {
   return next(new HandleERROR('Route not found', 404));
 });
 app.use(catchError);

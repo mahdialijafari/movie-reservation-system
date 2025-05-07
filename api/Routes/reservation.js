@@ -1,6 +1,5 @@
 import express from 'express'
 import { create, getAll, getOne, remove } from '../Controllers/reservationCn.js'
-import { isLogin } from '../Middlewares/isLogin.js'
 
 const reservationRouter = express.Router()
 
