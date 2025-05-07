@@ -17,39 +17,39 @@ import UpdateShowtime from "../Pages/Showtime/Update";
 import User from "../Pages/User";
 import GetAllUsers from "../Pages/User/GetAll";
 import UpdateUser from "../Pages/User/Update";
-import Login from "../Pages/Login";
+// import Login from "../Pages/Login";
 import Layout from "../Components/Layout";
 import Home from "../Pages/Home";
-import store from "../Store";
+// import store from "../Store";
 
-const checkAuth = () => {
-  const state = store.getState();
-  const token = state?.auth?.token;
+// const checkAuth = () => {
+//   const state = store.getState();
+//   const token = state?.auth?.token;
 
-  if (!token) {
-    return redirect("/login");
-  }
-  return null;
-};
-const checkLogin = () => {
-  const state = store.getState();
-  const token = state?.auth?.token;
+//   if (!token) {
+//     return redirect("/login");
+//   }
+//   return null;
+// };
+// const checkLogin = () => {
+//   const state = store.getState();
+//   const token = state?.auth?.token;
 
-  if (token) {
-    return redirect("/");
-  }
-  return null;
-};
+//   if (token) {
+//     return redirect("/");
+//   }
+//   return null;
+// };
 
 const router = createBrowserRouter([
-  {
-    path: "/login",
-    loader: checkLogin,
-    element: <Login />,
-  },
+//   {
+//     path: "/login",
+//     loader: checkLogin,
+//     element: <Login />,
+//   },
   {
     path: "/",
-    loader: checkAuth,
+    // loader: checkAuth,
     element: <Layout />,
     children: [
       {
