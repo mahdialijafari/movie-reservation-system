@@ -22,7 +22,7 @@ export const getAll = catchAsync(async (req, res, next) => {
 export const getOne = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
-  const movie = await Movie.findById(id).populate("categories showtimes");
+  const movie = await Movie.findById(id).populate("showtimes");
   if (!movie) {
     return next(new HandleERROR("Movie not found", 404));
   }

@@ -1,27 +1,29 @@
 import jwt from "jsonwebtoken";
+import { HandleERROR } from "vanta-api";
 
 export const isAdmin = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  console.log("AUTH HEADER:", authHeader);
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return next(new HandleERROR("No token provided", 401));
+  }
+
+  const token = authHeader.split(" ")[1];
   try {
-    const token = req.headers?.authorization?.split(" ")[1];
-    if (!token) throw new Error("No token provided");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("DECODED TOKEN:", decoded);
 
-    const { id, role } = jwt.verify(token, process.env.SECRET_JWT);
-    req.userId = id;
-    req.role = role;
-
-    if (role !== "admin" && role !== "superAdmin") {
-      return res.status(401).json({
-        message: "You don't have permission",
-        success: false,
-      });
+    if (decoded.role !== "admin") {
+      return next(new HandleERROR("Access denied: Admins only", 403));
     }
 
-    next();
-  } catch (error) {
-    console.log(error);
-    return res.status(401).json({
-      message: "Invalid or missing token",
-      success: false,
-    });
+    // Optional: attach user info to request
+    req.user = decoded;
+
+    next(); // ✅ user is admin
+  } catch (err) {
+    console.log("JWT ERROR:", err.message);
+    return next(new HandleERROR("Invalid token", 401));
   }
 };

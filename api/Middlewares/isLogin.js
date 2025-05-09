@@ -4,7 +4,7 @@ export const isLogin = (req, res, next) => {
   try {
     const { id, role } = jwt.verify(
       req.headers?.authorization.split(" ")[1],
-      process.env.SECRET_JWT
+      process.env.JWT_SECRET
     );
     req.userId = id;
     req.role = role;

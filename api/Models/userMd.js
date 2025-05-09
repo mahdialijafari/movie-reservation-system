@@ -6,14 +6,14 @@ const userSchema = new mongoose.Schema({
   birthDate: Date,
   email: {
     type: String,
-    required: [true, "Email is required"],
+    // required: [true, "Email is required"],
     unique: true,
     match: [/.+\@.+\..+/, "Invalid email format"],
   },
   phoneNumber: {
     type: String,
     match: [/^(\+98|0)?9\d{9}$/, "Phone number invalid"],
-    required: [true, "Phone number is required"],
+    // required: [true, "Phone number is required"],
     unique: true,
   },
   password: {

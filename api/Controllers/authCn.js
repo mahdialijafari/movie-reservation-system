@@ -9,28 +9,59 @@ const generateToken = (user) => {
 };
 
 export const auth = catchAsync(async (req, res, next) => {
-  const { phoneNumber = null } = req.body;
-  if (!phoneNumber) return next(new HandleERROR("Phone number is required", 400));
+  const { username, password } = req.body;
 
-  const user = await User.findOne({ phoneNumber });
-  const passwordExist = !!user?.password;
-
-  if (!passwordExist) {
-    const smsResult = await sendAuthCode(phoneNumber);
-    if (!smsResult?.success) return next(new HandleERROR("Failed to send code", 400));
+  if (!username || !password) {
+    return next(new HandleERROR("Username and password are required", 400));
   }
 
-  return res.status(200).json({
+  const existingUser = await User.findOne({ username });
+
+  // If user exists => login
+  if (existingUser) {
+    const isMatch = await bcrypt.compare(password, existingUser.password);
+    if (!isMatch) {
+      return next(new HandleERROR("Invalid username or password", 401));
+    }
+
+    const token = generateToken(existingUser);
+
+    return res.status(200).json({
+      success: true,
+      message: "Logged in successfully",
+      data: {
+        token,
+        user: {
+          id: existingUser._id,
+          username: existingUser.username,
+          role: existingUser.role,
+        },
+      },
+    });
+  }
+
+  // If user does not exist => signup
+  const hashedPassword = await bcrypt.hash(password, 12);
+  const newUser = await User.create({
+    username,
+    password: hashedPassword,
+  });
+
+  const token = generateToken(newUser);
+
+  return res.status(201).json({
     success: true,
-    message: passwordExist ? "Login with password" : "Code sent",
+    message: "Account created successfully",
     data: {
-      phoneNumber,
-      passwordExist,
-      newAccount: !user?._id,
+      token,
+      user: {
+        id: newUser._id,
+        username: newUser.username,
+        role: newUser.role,
+      },
     },
   });
 });
-
 export const checkOtp = catchAsync(async (req, res, next) => {
   const { phoneNumber = null, code = null } = req.body;
   if (!phoneNumber || !code) return next(new HandleERROR("Phone number and code are required", 400));
@@ -148,7 +179,7 @@ export const resendCode = catchAsync(async (req, res, next) => {
 export const adminLogin=catchAsync(async(req,res,next)=>{
   const { phoneNumber = null, password = null } = req.body;
 
-  if (!phoneNumber || !password) {
+  if ( !password) {
     return next(new HandleERROR("phone and password is required", 400));
   }
   const user = await User.findOne({ phoneNumber });
@@ -159,9 +190,9 @@ export const adminLogin=catchAsync(async(req,res,next)=>{
     return next(new HandleERROR("you do not have permission", 401));
   }
   const validPassword = bcryptjs.compareSync(password, user?.password);
-  // if (!validPassword) {
-  //   return next(new HandleERROR("password incorrect", 401));
-  // }
+  if (!validPassword) {
+    return next(new HandleERROR("password incorrect", 401));
+  }
   const token = jwt.sign(
     { id: user._id, role: user.role, phoneNumber: user.phoneNumber },
     process.env.JWT_SECRET

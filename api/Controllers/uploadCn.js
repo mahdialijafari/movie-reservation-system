@@ -5,7 +5,7 @@ import { __dirname } from "../app.js";
 export const uploadCn = catchAsync(async (req, res, next) => {
   const file = req.file;
   if (!file) {
-    return next(new HandleError("UPLOAD failed", 400));
+    return next(new HandleERROR("UPLOAD failed", 400));
   }
   return res.status(201).json({
     success:true,
@@ -19,10 +19,10 @@ export const deleteFile = catchAsync(async (req, res, next) => {
   const deleteFileName = fileName.split("/").at(-1);
 
   if (deleteFileName == "*") {
-    return next(new HandleError("File not found", 400));
+    return next(new HandleERROR("File not found", 400));
   }
   if (!fileName) {
-    return next(new HandleError("File not found", 400));
+    return next(new HandleERROR("File not found", 400));
   }
   fs.unlinkSync(`${__dirname}/Public/${deleteFileName}`);
 
