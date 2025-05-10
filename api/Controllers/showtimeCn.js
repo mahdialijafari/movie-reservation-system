@@ -1,17 +1,20 @@
+import Movie from "../Models/movieMd.js";
 import { catchAsync, HandleERROR } from "vanta-api";
 import ApiFeatures from "vanta-api";
+import mongoose from "mongoose";
 import Showtime from "../Models/showtimeMd.js";
-import Movie from "../Models/movieMd.js";
 
 export const getAll = catchAsync(async (req, res, next) => {
+  console.log("Movie model registered?", mongoose.models.Movie !== undefined);
+
   const features = new ApiFeatures(Showtime, req.query)
     .filter()
     .sort()
     .limitFields()
     .paginate()
-    .populate("movie room");
 
-  const showtimes = await features.execute();
+  let showtimes = await features.execute();
+  showtimes = await Showtime.populate(showtimes, { path: "movie" });
 
   res.status(200).json({
     success: true,
