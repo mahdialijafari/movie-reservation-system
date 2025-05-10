@@ -19,6 +19,7 @@ const UpdateMovies = () => {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   useEffect(() => {
     const fetchMovie = async () => {
@@ -101,10 +102,12 @@ const UpdateMovies = () => {
     setLoading(false);
   };
 
-  const handleDelete = async () => {
-    const confirm = window.confirm("آیا از حذف این فیلم مطمئن هستید؟");
-    if (!confirm) return;
+  const confirmDelete = () => {
+    setShowConfirmModal(true);
+  };
 
+  const handleDeleteConfirmed = async () => {
+    setShowConfirmModal(false);
     setDeleting(true);
 
     const response = await fetchData(`movies/${id}`, {
@@ -114,7 +117,7 @@ const UpdateMovies = () => {
       },
     });
 
-    if (response.success) {
+    if (response?.success) {
       notify("فیلم با موفقیت حذف شد", "success");
       navigate("/movies");
     } else {
@@ -125,13 +128,19 @@ const UpdateMovies = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto bg-white p-6 rounded-md shadow-md" dir="rtl">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">ویرایش فیلم</h2>
+    <div
+      className="max-w-xl mx-auto bg-white p-6 rounded-md shadow-md"
+      dir="rtl"
+    >
+      <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">
+        ویرایش فیلم
+      </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">عنوان فیلم *</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            عنوان فیلم *
+          </label>
           <input
             name="title"
             value={formData.title}
@@ -142,7 +151,9 @@ const UpdateMovies = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">توضیحات *</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            توضیحات *
+          </label>
           <textarea
             name="description"
             value={formData.description}
@@ -153,7 +164,9 @@ const UpdateMovies = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">ژانرها (با ویرگول جدا کنید) *</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            ژانرها (با ویرگول جدا کنید) *
+          </label>
           <input
             name="genre"
             value={formData.genre}
@@ -164,7 +177,9 @@ const UpdateMovies = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">مدت زمان (دقیقه) *</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            مدت زمان (دقیقه) *
+          </label>
           <input
             type="number"
             name="duration"
@@ -176,7 +191,9 @@ const UpdateMovies = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">تصویر پوستر *</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            تصویر پوستر *
+          </label>
           <input
             type="file"
             onChange={handleImageUpload}
@@ -205,7 +222,7 @@ const UpdateMovies = () => {
 
           <button
             type="button"
-            onClick={handleDelete}
+            onClick={confirmDelete}
             disabled={deleting}
             className="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 disabled:bg-red-300"
           >
@@ -213,6 +230,36 @@ const UpdateMovies = () => {
           </button>
         </div>
       </form>
+      {showConfirmModal && (
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+            <h2 className="text-lg font-semibold mb-4">تأیید حذف</h2>
+            <p className="mb-6 text-gray-700">
+              آیا از حذف این فیلم مطمئن هستید؟
+            </p>
+
+            <div className="flex justify-end gap-3">
+              <button
+                type="button"
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md"
+                onClick={() => setShowConfirmModal(false)}
+                disabled={deleting}
+              >
+                انصراف
+              </button>
+
+              <button
+                type="button"
+                onClick={handleDeleteConfirmed}
+                disabled={deleting}
+                className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 disabled:bg-red-300"
+              >
+                {deleting ? "در حال حذف..." : "تأیید حذف"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
