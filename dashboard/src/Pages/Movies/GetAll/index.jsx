@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import fetchData from "../../../Utils/fetchData";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 const GetAllMovies = () => {
   const [movies, setMovies] = useState([]);
@@ -9,7 +8,6 @@ const GetAllMovies = () => {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const { token } = useSelector((state) => state.auth);
   const [totalCount, setTotalCount] = useState(0);
   const navigate = useNavigate();
 

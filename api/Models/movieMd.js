@@ -16,6 +16,7 @@ const movieSchema = new mongoose.Schema({
   posterImage: {
     type: [String], // URL or path to image
     required: true,
+    default:[]
   },
   duration: {
     type: Number, // in minutes

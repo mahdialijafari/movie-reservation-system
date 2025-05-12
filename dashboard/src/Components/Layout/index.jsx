@@ -57,7 +57,7 @@ const Layout = () => {
                 { to: "/movies", label: "فیلم‌ها", icon: <FiVideo /> },
                 { to: "/reservation", label: "رزروها", icon: <FiClipboard /> },
                 { to: "/seats", label: "صندلی‌ها", icon: <FiGrid /> },
-                { to: "/showtime", label: "زمان‌بندی نمایش", icon: <FiClock /> },
+                { to: "/showtime", label: "سانس ها", icon: <FiClock /> },
                 { to: "/user", label: "کاربران", icon: <FiUser /> },
               ].map(({ to, label, icon }) => (
                 <li key={to}>

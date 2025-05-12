@@ -3,6 +3,7 @@ import ApiFeatures from "vanta-api";
 import Movie from "../Models/movieMd.js";
 import fs from "fs";
 import { __dirname } from "../app.js";
+import Showtime from "../Models/showtimeMd.js";
 
 export const getAll = catchAsync(async (req, res, next) => {
   const features = new ApiFeatures(Movie, req.query)
@@ -60,6 +61,15 @@ export const update = catchAsync(async (req, res, next) => {
 
 export const remove = catchAsync(async (req, res, next) => {
   const { id } = req.params;
+  const showtime = await Showtime.findOne({ movie: id });
+  const movie=await Movie.findOne({showtimes:id})
+  if (showtime || movie) {
+    return next(
+      new HandleERROR(
+        "you can't delete this movie, please first delete all showtimes of this movie",
+        400
+      )
+    );}
   const movieFile = await Movie.findByIdAndDelete(id);
   
   if (!movieFile) {
