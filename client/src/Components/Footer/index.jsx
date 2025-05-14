@@ -1,50 +1,73 @@
 import React from 'react';
-import { Box, Container, Typography, Grid, Link } from '@mui/material';
+import { Box, Typography, Grid, Link as MuiLink, useTheme } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const Footer = () => {
+  const theme = useTheme();
+  const navigate = useNavigate();
+  const { token } = useSelector((state) => state.auth);
+
   return (
     <Box
       component="footer"
       sx={{
-        backgroundColor: (theme) => theme.palette.secondary.main,
-        color: (theme) => theme.palette.secondary.contrastText,
+        bgcolor: theme.palette.secondary.main,
+        color: theme.palette.secondary.contrastText,
         py: 4,
-        mt: 5,
+        px: { xs: 3, sm: 8 },
+        mt: 8,
+        direction: 'rtl',
       }}
     >
-      <Container maxWidth="lg">
-        <Grid container spacing={4}>
-          <Grid xs={12} md={4}>
-            <Typography variant="h6" gutterBottom>
-              MovieReserve
-            </Typography>
-            <Typography variant="body2">
-              Book your favorite movies with ease and enjoy your cinematic journey!
-            </Typography>
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <Typography variant="h6" gutterBottom>
-              Quick Links
-            </Typography>
-            <Link href="/" color="inherit" underline="hover" display="block">Home</Link>
-            <Link href="/movies" color="inherit" underline="hover" display="block">Movies</Link>
-            <Link href="/auth" color="inherit" underline="hover" display="block">Login</Link>
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <Typography variant="h6" gutterBottom>
-              Contact Us
-            </Typography>
-            <Typography variant="body2">Email: support@moviereserve.com</Typography>
-            <Typography variant="body2">Phone: +123 456 789</Typography>
-          </Grid>
+      <Grid container spacing={4}>
+        {/* Website Info */}
+        <Grid item xs={12} sm={6} md={4}>
+          <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
+            سینماگرام 🎬
+          </Typography>
+          <Typography variant="body2" sx={{ color: theme.palette.secondary.contrastText }}>
+            تجربه‌ای متفاوت از دنیای سینما. رزرو بلیط، مشاهده فیلم‌ها، و بررسی آخرین اخبار سینمایی.
+          </Typography>
         </Grid>
 
-        <Typography variant="body2" align="center" sx={{ mt: 4 }}>
-          © {new Date().getFullYear()} MovieReserve. All rights reserved.
+        {/* Quick Links */}
+        <Grid item xs={12} sm={6} md={4}>
+          <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
+            لینک‌های مفید
+          </Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <MuiLink
+              onClick={() => navigate('/movies')}
+              sx={{ cursor: 'pointer', color: 'inherit', textDecoration: 'none' }}
+            >
+              🎬 فیلم‌ها
+            </MuiLink>
+            <MuiLink
+              onClick={() => navigate('/my-tickets')}
+              sx={{ cursor: 'pointer', color: 'inherit', textDecoration: 'none' }}
+            >
+              🎟️ بلیط‌های من
+            </MuiLink>
+            <MuiLink
+              onClick={() => navigate(token ? '/profile' : '/auth')}
+              sx={{ cursor: 'pointer', color: 'inherit', textDecoration: 'none' }}
+            >
+              {token ? '👤 پروفایل' : '🔐 ورود | ثبت‌نام'}
+            </MuiLink>
+          </Box>
+        </Grid>
+
+        {/* Empty column for layout balance */}
+        <Grid item xs={12} md={4} />
+      </Grid>
+
+      {/* Bottom Bar */}
+      <Box sx={{ textAlign: 'center', mt: 4, borderTop: `1px solid ${theme.palette.divider}`, pt: 2 }}>
+        <Typography variant="body2" sx={{ color: theme.palette.secondary.contrastText }}>
+          © {new Date().getFullYear()} سینماگرام. همه حقوق محفوظ است.
         </Typography>
-      </Container>
+      </Box>
     </Box>
   );
 };
