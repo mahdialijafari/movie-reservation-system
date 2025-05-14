@@ -1,4 +1,4 @@
-import Seat from '../Models/seatMd.js';
+import Seat from '../Models/theaterMd.js';
 import Reservation from '../Models/reservationMd.js';
 
 export const checkSeatAvailability = async (showtimeId, seatNumbers = []) => {

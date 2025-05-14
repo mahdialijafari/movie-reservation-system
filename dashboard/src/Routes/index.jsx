@@ -7,9 +7,6 @@ import UpdateMovies from "../Pages/Movies/Update";
 import Reservation from "../Pages/Reservation";
 import GetAllReservation from "../Pages/Reservation/GetAll";
 import CreateReservation from "../Pages/Reservation/Create";
-import Seats from "../Pages/seats";
-import GetAllSeats from "../Pages/Seats/GetAll";
-import CreateSeats from "../Pages/Seats/Create";
 import Showtime from "../Pages/Showtime";
 import GetAllShowtime from "../Pages/Showtime/GetAll";
 import CreateShowtime from "../Pages/Showtime/Create";
@@ -21,6 +18,9 @@ import Login from "../Pages/Login";
 import Layout from "../Components/Layout";
 import Home from "../Pages/Home";
 import store from "../Store";
+import Theater from "../Pages/Theater";
+import GetAllTheaters from "../Pages/Theater/GetAll";
+import CreateTheater from "../Pages/Theater/Create";
 
 const checkAuth = () => {
   const state = store.getState();
@@ -88,16 +88,16 @@ const router = createBrowserRouter([
           },
         ],
       },{
-        path: "/seats",
-        element: <Seats />,
+        path: "/theater",
+        element: <Theater />,
         children: [
           { 
             index:true, 
-            element: <GetAllSeats /> 
+            element: <GetAllTheaters /> 
           },
           {
             path: "create",
-            element: <CreateSeats />,
+            element: <CreateTheater />,
           },
         ],
       },

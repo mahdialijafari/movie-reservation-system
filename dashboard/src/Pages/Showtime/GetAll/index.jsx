@@ -86,10 +86,18 @@ const GetAllShowtime = () => {
                     <td className="px-6 py-4 text-sm text-gray-600">
                       {new Date(s.dateTime).toLocaleString("fa-IR")}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{s.theater}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{s.price?.toLocaleString()} تومان</td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{s.seats}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{s.reservedSeats} نفر</td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {s.theater?.name || "-"}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {s.price?.toLocaleString()} تومان
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {s.theater?.seatCount || s.seats || "-"}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {s.reservedSeats} نفر
+                    </td>
                   </tr>
                 ))}
               </tbody>

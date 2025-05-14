@@ -1,8 +1,6 @@
 import Movie from "../Models/movieMd.js";
 import { catchAsync, HandleERROR } from "vanta-api";
-// import ApiFeatures from "vanta-api";
-import ApiFeatures from "../Utils/apiFeatures.js";
-import mongoose from "mongoose";
+import ApiFeatures from "vanta-api";
 import Showtime from "../Models/showtimeMd.js";
 
 export const getAll = catchAsync(async (req, res, next) => {
@@ -11,9 +9,8 @@ export const getAll = catchAsync(async (req, res, next) => {
     .sort()
     .limitFields()
     .paginate()
-    .populate("movie");
+    .populate("movie,theater")
   let showtimes = await features.execute();
-  // showtimes = await Showtime.populate(showtimes, { path: "movie", select: "title" });
 
   return res.status(200).json({
     success: true,
@@ -53,7 +50,10 @@ export const create = catchAsync(async (req, res, next) => {
     seats: seatCount,
     isReserved,
   });
-
+  await Movie.findByIdAndUpdate(newShowtime.movie, {
+    $push: { showtimes: newShowtime._id },
+  });
+  
   return res.status(201).json({
     success: true,
     data: newShowtime,
@@ -101,7 +101,7 @@ export const getByMovieGrouped = catchAsync(async (req, res, next) => {
 
   const showtimes = await Showtime.find({ movie: movieId })
     .sort("dateTime")
-    .populate("room movie");
+    .populate("movie");
 
   const grouped = showtimes.reduce((acc, showtime) => {
     const date = new Date(showtime.dateTime).toISOString().split("T")[0];

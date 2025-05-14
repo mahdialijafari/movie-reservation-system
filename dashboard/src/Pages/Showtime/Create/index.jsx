@@ -17,16 +17,21 @@ const CreateShowtime = () => {
   });
 
   const [movies, setMovies] = useState([]);
+  const [theaters, setTheaters] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchMovies = async () => {
-      const res = await fetchData("movies", {
-        headers: { authorization: `Bearer ${token}` },
-      });
-      if (res.success) setMovies(res.data?.data);
+    const fetchDataAll = async () => {
+      const [movieRes, theaterRes] = await Promise.all([
+        fetchData("movies", { headers: { authorization: `Bearer ${token}` } }),
+        fetchData("theater", { headers: { authorization: `Bearer ${token}` } }),
+      ]);
+
+      if (movieRes.success) setMovies(movieRes.data?.data || []);
+      if (theaterRes.success) setTheaters(theaterRes.data || []);
     };
-    fetchMovies();
+
+    if (token) fetchDataAll();
   }, [token]);
 
   const handleChange = (e) => {
@@ -109,14 +114,20 @@ const CreateShowtime = () => {
 
         <div>
           <label className="text-sm font-medium">سالن *</label>
-          <input
+          <select
             name="theater"
             value={formData.theater}
             onChange={handleChange}
             className="w-full border px-3 py-2 rounded"
-            placeholder="مثلاً: سالن 1"
             required
-          />
+          >
+            <option value="">انتخاب سالن</option>
+            {theaters.map((t) => (
+              <option key={t._id} value={t._id}>
+                {t.name}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div>

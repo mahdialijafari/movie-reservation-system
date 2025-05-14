@@ -1,9 +1,10 @@
 import { catchAsync, HandleERROR } from "vanta-api";
 import ApiFeatures from "vanta-api";
 import Movie from "../Models/movieMd.js";
+import Showtime from "../Models/showtimeMd.js";
 import fs from "fs";
 import { __dirname } from "../app.js";
-import Showtime from "../Models/showtimeMd.js";
+// import ApiFeatures from "../Utils/apiFeatures.js";
 
 export const getAll = catchAsync(async (req, res, next) => {
   const features = new ApiFeatures(Movie, req.query)
@@ -11,7 +12,7 @@ export const getAll = catchAsync(async (req, res, next) => {
     .sort()
     .limitFields()
     .paginate()
-    .populate();
+    .populate("showtimes");
 
   const movies = await features.execute();
 
@@ -26,9 +27,7 @@ export const getOne = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
   const movie = await Movie.findById(id).populate("showtimes");
-  if (!movie) {
-    return next(new HandleERROR("Movie not found", 404));
-  }
+  if (!movie) return next(new HandleERROR("Movie not found", 404));
 
   return res.status(200).json({
     success: true,
@@ -49,9 +48,7 @@ export const update = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
   const movie = await Movie.findByIdAndUpdate(id, req.body, { new: true });
-  if (!movie) {
-    return next(new HandleERROR("Movie not found", 404));
-  }
+  if (!movie) return next(new HandleERROR("Movie not found", 404));
 
   return res.status(200).json({
     success: true,
@@ -61,22 +58,19 @@ export const update = catchAsync(async (req, res, next) => {
 
 export const remove = catchAsync(async (req, res, next) => {
   const { id } = req.params;
+
   const showtime = await Showtime.findOne({ movie: id });
-  const movie=await Movie.findOne({showtimes:id})
-  if (showtime || movie) {
+  if (showtime)
     return next(
       new HandleERROR(
-        "you can't delete this movie, please first delete all showtimes of this movie",
+        "You can't delete this movie, please first delete all showtimes of this movie",
         400
       )
-    );}
-  const movieFile = await Movie.findByIdAndDelete(id);
-  
-  if (!movieFile) {
-    return next(new HandleERROR("Movie not found", 404));
-  }
+    );
 
-  // Assuming movieFile.posterImage is an array of image paths
+  const movieFile = await Movie.findByIdAndDelete(id);
+  if (!movieFile) return next(new HandleERROR("Movie not found", 404));
+
   for (let image of movieFile?.posterImage) {
     try {
       fs.unlinkSync(`${__dirname}/Public/${image}`);
@@ -95,19 +89,16 @@ export const getMovieShowtimesByDate = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
   const movie = await Movie.findById(id).populate("showtimes");
-  if (!movie) {
-    return next(new HandleERROR("Movie not found", 404));
-  }
+  if (!movie) return next(new HandleERROR("Movie not found", 404));
 
-  // Example fallback logic if groupShowtimesByDate isn't available
   const showtimes = movie.showtimes.reduce((acc, showtime) => {
-    const date = new Date(showtime.date).toISOString().split("T")[0];
+    const date = new Date(showtime.dateTime).toISOString().split("T")[0];
     if (!acc[date]) acc[date] = [];
     acc[date].push(showtime);
     return acc;
   }, {});
 
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     data: showtimes,
   });

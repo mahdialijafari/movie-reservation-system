@@ -56,7 +56,7 @@ const Layout = () => {
                 { to: "/", label: "خانه", icon: <FiHome /> },
                 { to: "/movies", label: "فیلم‌ها", icon: <FiVideo /> },
                 { to: "/reservation", label: "رزروها", icon: <FiClipboard /> },
-                { to: "/seats", label: "صندلی‌ها", icon: <FiGrid /> },
+                { to: "/theater", label: "سالن ها", icon: <FiGrid /> },
                 { to: "/showtime", label: "سانس ها", icon: <FiClock /> },
                 { to: "/user", label: "کاربران", icon: <FiUser /> },
               ].map(({ to, label, icon }) => (

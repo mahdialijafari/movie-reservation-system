@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function CreateSeats() {
+export default function Movies() {
   return (
     <div>
       

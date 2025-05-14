@@ -3,11 +3,19 @@ import { useSelector } from "react-redux";
 import fetchData from "../../../Utils/fetchData";
 import notify from "../../../Utils/notify";
 import { useNavigate } from "react-router-dom";
+import { SeatToolkit } from '@mezh-hq/react-seat-toolkit';
+
 
 const CreateReservation = () => {
   const { token } = useSelector((state) => state.auth);
   const navigate = useNavigate();
-
+  const seatLayout = [
+    [{ id: 'A1' }, { id: 'A2' }, { type: 'space' }, { id: 'A3' }, { id: 'A4' }],
+    [{ id: 'B1' }, { id: 'B2' }, { type: 'space' }, { id: 'B3' }, { id: 'B4' }],
+    [{ id: 'C1' }, { id: 'C2' }, { type: 'space' }, { id: 'C3' }, { id: 'C4' }],
+    [{ id: 'D1', disabled: true }, { id: 'D2' }, { type: 'space' }, { id: 'D3' }, { id: 'D4' }],
+  ];
+  
   const [formData, setFormData] = useState({
     showtime: "",
     seats: "",
@@ -127,6 +135,10 @@ const CreateReservation = () => {
           {loading ? "در حال ارسال..." : "ثبت رزرو"}
         </button>
       </form>
+      <div>
+      <SeatToolkit layout={seatLayout} />
+    </div>
+
     </div>
   );
 };

@@ -7,7 +7,6 @@ import dotenv from 'dotenv';
 import authRouter from './Routes/auth.js';
 import movieRouter from './Routes/movie.js';
 import showtimeRouter from './Routes/showtime.js';
-import seatRouter from './Routes/seat.js';
 import reservationRouter from './Routes/reservation.js';
 import userRouter from './Routes/user.js';
 import reportRouter from './Routes/report.js';
@@ -15,6 +14,7 @@ import { isLogin } from './Middlewares/isLogin.js';
 import { isAdmin } from './Middlewares/isAdmin.js';
 import { catchError,HandleERROR } from 'vanta-api';
 import uploadRouter from './Routes/upload.js';
+import theaterRouter from './Routes/theater.js';
 
 dotenv.config();
 
@@ -32,7 +32,7 @@ app.use(express.static('Public'));
 app.use('/api/auth', authRouter);
 app.use('/api/movies', movieRouter);
 app.use('/api/showtime', showtimeRouter);
-app.use('/api/seats', seatRouter);
+app.use('/api/theater', theaterRouter);
 app.use('/api/reservations',  reservationRouter);
 app.use('/api/users', isLogin, userRouter);
 app.use('/api/reports', isAdmin, reportRouter);
