@@ -4,9 +4,10 @@ import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import { Provider, useSelector } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import store from "./Store/index.js";
+import store, { persistor } from "./Store/index.js";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { lightTheme, darkTheme } from "./Theme";
+import { PersistGate } from "redux-persist/integration/react";
 
 // A wrapper to connect theme from Redux
 function ThemedApp() {
@@ -16,7 +17,9 @@ function ThemedApp() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <PersistGate loading={null} persistor={persistor}>
       <App />
+    </PersistGate>
     </ThemeProvider>
   );
 }

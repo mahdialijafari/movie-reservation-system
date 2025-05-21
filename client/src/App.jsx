@@ -18,7 +18,7 @@ export default function App() {
         <Route exact path='/' element={<Home/>}/>
         <Route path='/movies' element={<Movies/>}/>
 
-        <Route path='/auth' element={token?<Navigate to={'/profile'}/>:<Auth/>}/>
+        <Route path='/auth' element={token?<Navigate to={'/'}/>:<Auth/>}/>
         <Route path='/profile' element={!token?<Navigate to={'/auth'}/>:<Profile/>}/>
         <Route path='*' element={<NotFound/>}/>
       </Routes>

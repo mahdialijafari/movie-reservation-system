@@ -9,7 +9,7 @@ const generateToken = (user) => {
 };
 
 export const auth = catchAsync(async (req, res, next) => {
-  const { username, password } = req.body;
+  const { fullname, username, email, password } = req.body;
 
   if (!username || !password) {
     return next(new HandleERROR("Username and password are required", 400));
@@ -19,7 +19,7 @@ export const auth = catchAsync(async (req, res, next) => {
 
   // If user exists => login
   if (existingUser) {
-    const isMatch = await bcrypt.compare(password, existingUser.password);
+    const isMatch = await bcryptjs.compare(password, existingUser.password);
     if (!isMatch) {
       return next(new HandleERROR("Invalid username or password", 401));
     }
@@ -41,9 +41,15 @@ export const auth = catchAsync(async (req, res, next) => {
   }
 
   // If user does not exist => signup
-  const hashedPassword = await bcrypt.hash(password, 12);
+  if (!email) {
+    return next(new HandleERROR("Email is required for registration", 400));
+  }
+
+  const hashedPassword = await bcryptjs.hash(password, 12);
   const newUser = await User.create({
+    fullname,
     username,
+    email,
     password: hashedPassword,
   });
 
@@ -62,6 +68,7 @@ export const auth = catchAsync(async (req, res, next) => {
     },
   });
 });
+
 export const checkOtp = catchAsync(async (req, res, next) => {
   const { phoneNumber = null, code = null } = req.body;
   if (!phoneNumber || !code) return next(new HandleERROR("Phone number and code are required", 400));
