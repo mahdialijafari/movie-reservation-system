@@ -47,12 +47,11 @@ export default function Home() {
       <Box
         sx={{
           textAlign: 'center',
-          mb: 6,
           backgroundImage: theme.palette.mode === 'dark' ? 'url(/images/hero-pattern.svg)' : 'none',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           borderRadius: 3,
-          p: { xs: 4, md: 8 },
+          p: { xs: 4, md: 6 },
         }}
       >
         <Typography variant="h2" sx={{ color: theme.palette.primary.main, fontWeight: 'bold', mb: 2 }}>
@@ -64,22 +63,18 @@ export default function Home() {
       </Box>
 
       {/* Divider */}
-      <Divider sx={{ my: 4 }} />
+      <Divider sx={{ my: 1 }} />
 
-      {/* Movies Section */}
       {/* Movies Section */}
 <Box>
   <Typography variant="h4" sx={{ color: theme.palette.text.primary, mb: 4, fontWeight: 600 }}>
     🎥 جدیدترین فیلم‌ها
   </Typography>
 
-  <Grid container spacing={4}>
+  <Grid container spacing={2} justifyContent='space-between'>
     {movies.length > 0 ? (
       movies.slice(0, 3).map((movie) => (
-        <Grid item xs={12} sm={6} md={3} key={movie._id} sx={{
-          display:'flex',
-          justifyContent:'space-between',
-        }}>
+        <Grid item xs={12} sm={6} md={3} key={movie._id} >
           <Card
             sx={{
               bgcolor: theme.palette.background.paper,
@@ -94,6 +89,7 @@ export default function Home() {
             <CardMedia
               component="img"
               height="300"
+              width='100%'
               image={`${import.meta.env.VITE_BASE_FILE}${movie.posterImage}`}
               alt={movie.title}
               sx={{ objectFit: 'cover', borderTopLeftRadius: 12, borderTopRightRadius: 12 }}

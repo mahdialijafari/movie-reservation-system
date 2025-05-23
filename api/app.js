@@ -15,6 +15,7 @@ import { isAdmin } from './Middlewares/isAdmin.js';
 import { catchError,HandleERROR } from 'vanta-api';
 import uploadRouter from './Routes/upload.js';
 import theaterRouter from './Routes/theater.js';
+import searchRouter from './Routes/search.js';
 
 dotenv.config();
 
@@ -36,6 +37,7 @@ app.use('/api/theater', theaterRouter);
 app.use('/api/reservations',  reservationRouter);
 app.use('/api/users', isLogin, userRouter);
 app.use('/api/reports', isAdmin, reportRouter);
+app.use('/api/search', searchRouter);
 
 app.use('/api/upload',uploadRouter)
 
