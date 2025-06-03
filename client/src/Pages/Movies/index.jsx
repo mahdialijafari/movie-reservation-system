@@ -274,7 +274,7 @@ export default function Movies() {
 
 
 
-      <Grid container spacing={4} justifyContent="space-between">
+      <Grid container spacing={4} margin={'5% auto'}>
         {filteredMovies.length > 0 ? (
           filteredMovies.map((movie) => (
             <Grid item xs={12} sm={6} md={3} key={movie._id}>

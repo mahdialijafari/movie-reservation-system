@@ -38,7 +38,7 @@ const Navbar = () => {
   const handleLogout = () => {
     dispatch(logout());
     navigate("/auth");
-    notify('success','logout successfully')
+    notify('از حسابتان خارج شدید','success')
   };
   return (
     <AppBar

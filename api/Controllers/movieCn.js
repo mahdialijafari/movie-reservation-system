@@ -12,7 +12,7 @@ export const getAll = catchAsync(async (req, res, next) => {
     .sort()
     .limitFields()
     .paginate()
-    .populate("showtimes");
+    .populate(["showtimes"]);
 
   const movies = await features.execute();
 
@@ -33,7 +33,8 @@ export const getOne = catchAsync(async (req, res, next) => {
     success: true,
     data: movie,
   });
-});
+});  
+
 
 export const create = catchAsync(async (req, res, next) => {
   const movie = await Movie.create(req.body);

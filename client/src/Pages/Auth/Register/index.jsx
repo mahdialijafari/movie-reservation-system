@@ -51,7 +51,7 @@ export default function Register({ handlePageType }) {
       dispatch(login({ user: res.data?.user, token: res.data?.token }));
       localStorage.setItem("token", res.data?.token);
       navigate("/");
-      notify('success','register successfully')
+      notify('ثبت نام با موفقیت انجام شد','success')
     }
   };
 

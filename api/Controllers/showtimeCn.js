@@ -2,6 +2,7 @@ import Movie from "../Models/movieMd.js";
 import { catchAsync, HandleERROR } from "vanta-api";
 import ApiFeatures from "vanta-api";
 import Showtime from "../Models/showtimeMd.js";
+import mongoose from "mongoose";
 
 export const getAll = catchAsync(async (req, res, next) => {
   const features = new ApiFeatures(Showtime, req.query)
@@ -9,7 +10,7 @@ export const getAll = catchAsync(async (req, res, next) => {
     .sort()
     .limitFields()
     .paginate()
-    .populate("movie,theater")
+    .populate(["movie","theater"])
   let showtimes = await features.execute();
 
   return res.status(200).json({
@@ -22,7 +23,7 @@ export const getAll = catchAsync(async (req, res, next) => {
 export const getOne = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
-  const showtime = await Showtime.findById(id).populate("movie");
+  const showtime = await Showtime.findById(id).populate("movie theater");
   if (!showtime) {
     return next(new HandleERROR("Showtime not found", 404));
   }
@@ -40,25 +41,32 @@ export const create = catchAsync(async (req, res, next) => {
     return next(new HandleERROR("All fields are required", 400));
   }
 
+  if (!mongoose.Types.ObjectId.isValid(movie)) {
+    return next(new HandleERROR("Invalid movie ID", 400));
+  }
+
   const isReserved = Array(seatCount).fill(false);
 
   const newShowtime = await Showtime.create({
-    movie,
+    movie, // ✅ must be just an ID
     theater,
     dateTime,
     price,
     seats: seatCount,
     isReserved,
   });
-  await Movie.findByIdAndUpdate(newShowtime.movie, {
+
+  // Add showtime ID to existing movie
+  await Movie.findByIdAndUpdate(movie, {
     $push: { showtimes: newShowtime._id },
   });
-  
+
   return res.status(201).json({
     success: true,
     data: newShowtime,
   });
 });
+
 
 export const update = catchAsync(async (req, res, next) => {
   const { id } = req.params;

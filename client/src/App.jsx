@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { darkTheme, lightTheme } from './Theme'
 import { Toaster } from 'react-hot-toast'
+import ReserveSeats from './Pages/ReserveSeats'
 
 export default function App() {
   const {mode}=useSelector(state=>state.theme)
@@ -19,6 +20,7 @@ export default function App() {
         <Route exact path='/' element={<Home/>}/>
         <Route path='/movies' element={<Movies/>}/>
         <Route path='/movies/:id' element={<MovieDetails/>}/>
+        <Route path="/reserve/:showtimeId" element={<ReserveSeats />} />
         <Route path='/auth' element={token?<Navigate to={'/'}/>:<Auth/>}/>
         <Route path='/profile' element={!token?<Navigate to={'/auth'}/>:<Profile/>}/>
         <Route path='*' element={<NotFound/>}/>
