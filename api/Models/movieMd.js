@@ -23,15 +23,8 @@ const movieSchema = new mongoose.Schema(
       type: Number, // in minutes
       required: true,
     },
-    showtimes: {
-      type: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Showtime",
-        },
-      ],
-      default: [],
-    },
+    showtimes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Showtime" }],
+
   },
   { timestamps: true }
 );

@@ -93,6 +93,7 @@ const GetAllMovies = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{movie.duration}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                     {movie.showtimes?.length || 0}
+                    {console.log(movie?.showtimes)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                     {new Date(movie.createdAt).toLocaleDateString("fa-IR")}
